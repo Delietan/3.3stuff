@@ -31,6 +31,28 @@ router.get('/', ensureAuth, async function (req, res, next) {
 	res.json(guitars).status(200);
 });
 
+router.delete('/', ensureAuth, jsonParser, async function (req, res, next) {
+    try {
+        let id = req.body.id;
+
+        if (!id) {
+            return res.status(400).json({ success: false, message: "Guitar ID is required" });
+        }
+
+        const deletedRows = await db.Guitar.destroy({ where: { id } });
+
+        if (deletedRows === 0) {
+            return res.status(404).json({ success: false, message: "Guitar not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Guitar deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting guitar:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
+
 /* GET specified Guitar */
 router.get('/:guitarId', ensureAuth, async function (req, res, next) {
 	const guitar = await guitarService.getGuitarDetails(req.params.guitarId);
