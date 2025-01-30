@@ -10,7 +10,7 @@ var guitarsRouter = require('./routes/guitars');
 var populateRouter = require('./routes/populate');
 
 var db = require("./models");
-db.sequelize.sync({ force: false })
+db.sequelize.sync({ force: true })
 
 var app = express();
 
